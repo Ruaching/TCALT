@@ -1,0 +1,28 @@
+__pycache__/
+Config/
+dist/
+Excel Updater/
+Executables/
+images/
+OLD Versions/
+Other/
+TCALT NEW/
+Yeti/
+*.c
+*.h
+*.html
+*.pyc
+app_paths.py
+db_params.py
+db_reader.py
+fe_lookup.py
+log_params.py
+NoDeduction*.py
+property_check.py
+secrets_keychain.py
+settings_json.py
+*.spec
+TCALT.py
+*.TCO
+test.py
+version.txt
