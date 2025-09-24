@@ -19,6 +19,7 @@ fe_lookup.py
 log_params.py
 NoDeduction*.py
 property_check.py
+public_folder_searcher.py
 secrets_keychain.py
 settings_json.py
 *.spec
