@@ -21,9 +21,7 @@ from CTkMessagebox import CTkMessagebox
 from PIL import Image
 
 from db_params_example import Encryption as db_info
-from fe_lookup import FieldEngineer
 from log_params import logging, logs
-from property_check import create_iif
 from secrets_keychain import set_login_password, get_login_password, delete_login_password
 from settings_json import remember_user, remembered_user, animation_config, load_animation, default_tool
 
