@@ -768,9 +768,9 @@ def count_process_instances(process_name) -> int:
 
 def Excel_Thread() -> None:
     def run():
-        Excel_Function()
+        "Run excel function"
 
-    # start threading.Thread(target=run, daemon=True).start()
+    threading.Thread(target=run, daemon=True).start()
 
 def browse_file() -> Path:
     file_path = filedialog.askopenfilename(
@@ -785,7 +785,7 @@ def browse_file() -> Path:
         raise FileNotFoundError
 
 def resource_path(*parts: str) -> Path:
-    return Path
+    return Path()/'to file'
 
 def main_menu() -> None:
     menu = ctk.CTk()
@@ -794,16 +794,12 @@ def main_menu() -> None:
     _set_icon(menu)
     menu.resizable(False, False)
 
-    excel_icon_path = resource_path('images', 'excel_big.png')
-    pcheck_icon_path = resource_path('images', 'invoice.png')
     fe_icon_path = resource_path('images', 'field_engineer.png')
     member_icon_path = resource_path('images', 'members.png')
-    excel_icon = ctk.CTkImage(Image.open(excel_icon_path), size=(64, 64))
-    pcheck_icon = ctk.CTkImage(Image.open(pcheck_icon_path), size=(64, 64))
     fe_icon = ctk.CTkImage(Image.open(fe_icon_path), size=(64, 64))
     member_icon = ctk.CTkImage(Image.open(member_icon_path), size=(64, 64))
 
-    TOOLS = ['No Deduction', 'Property Check', 'Field Engineer Information', 'Member Information']
+    TOOLS = ['Field Engineer Information', 'Member Information']
 
     default = default_tool('load')
     
@@ -813,35 +809,18 @@ def main_menu() -> None:
 
     make_default = ctk.CTkCheckBox(menu, text='Set as default tool', checkbox_height=17, checkbox_width=17, corner_radius=3, hover=False, fg_color='darkgreen', font=(font, 11))
     default_label = ctk.CTkLabel(menu, text=f'Default: {default}', font=(font, 11))
-    excel_button = ctk.CTkButton(menu, image=excel_icon, text='', width=96, height=80, fg_color='#0b7054', hover_color='darkgreen', command=lambda: AppSwitcher.start_app(menu, '__Excel', int(make_default.get())))
-    pcheck_button = ctk.CTkButton(menu, image=pcheck_icon, text='', width=96, height=80, fg_color='#0b7054', hover_color='darkgreen', command=lambda: AppSwitcher.start_app(menu, '__Property_Check', int(make_default.get())))
     fe_button = ctk.CTkButton(menu, image=fe_icon, text='', width=96, height=80, fg_color='#0b7054', hover_color='darkgreen', command=lambda: AppSwitcher.start_app(menu, '__Field_Engineer', int(make_default.get())))
     member_button = ctk.CTkButton(menu, image=member_icon, text='', width=96, height=80, fg_color='#0b7054', hover_color='darkgreen', command=lambda: AppSwitcher.start_app(menu, '__Member', int(make_default.get())))
-    excel_label = ctk.CTkLabel(menu, text=TOOLS[0], font=(font, 11, 'bold'), height=0)
-    pcheck_label = ctk.CTkLabel(menu, text=TOOLS[1], font=(font, 11, 'bold'), height=0)
     fe_label = ctk.CTkLabel(menu, text=TOOLS[2], font=(font, 11, 'bold'), height=0)
     member_label = ctk.CTkLabel(menu, text=TOOLS[3], font=(font, 11, 'bold'), height=0)
 
-    if admin_access:
-        center_window(menu, 550, 150)
-        excel_button.place(relx=0.13, rely=0.35, anchor='center')
-        pcheck_button.place(relx=0.38, rely=0.35, anchor='center')
-        fe_button.place(relx=0.63, rely=0.35, anchor='center')
-        member_button.place(relx=0.88, rely=0.35, anchor='center')
-        excel_label.place(relx=0.13, rely=0.7, anchor='center')
-        pcheck_label.place(relx=0.38, rely=0.7, anchor='center')
-        fe_label.place(relx=0.63, rely=0.7, anchor='center')
-        member_label.place(relx=0.88, rely=0.7, anchor='center')
-        make_default.place(relx=0.5, rely=0.9, anchor='center')
-        default_label.place(relx=0.67, rely=0.9, anchor='w')
-    else:
-        center_window(menu, 350, 150)
-        fe_button.place(relx=0.3, rely=0.35, anchor='center')
-        member_button.place(relx=0.7, rely=0.35, anchor='center')
-        fe_label.place(relx=0.3, rely=0.7, anchor='center')
-        member_label.place(relx=0.7, rely=0.7, anchor='center')
-        make_default.place(relx=0.27, rely=0.9, anchor='center')
-        default_label.place(relx=0.47, rely=0.9, anchor='w')
+    center_window(menu, 350, 150)
+    fe_button.place(relx=0.3, rely=0.35, anchor='center')
+    member_button.place(relx=0.7, rely=0.35, anchor='center')
+    fe_label.place(relx=0.3, rely=0.7, anchor='center')
+    member_label.place(relx=0.7, rely=0.7, anchor='center')
+    make_default.place(relx=0.27, rely=0.9, anchor='center')
+    default_label.place(relx=0.47, rely=0.9, anchor='w')
     menu.protocol('WM_DELETE_WINDOW', lambda: Window_Close_App(menu))
     Reset_Timer(menu)
     menu.mainloop()
@@ -880,9 +859,9 @@ if __name__ == "__main__":
     def _set_icon(win: ctk.CTk) -> object:
         """Select the correct icon based on current OS"""
         if CurrentOS == 'Windows':
-            return win.iconbitmap(resource_path('images', 'Logo_Green.ico'))
+            return win.iconbitmap(resource_path('images', 'Logo.ico'))
         elif CurrentOS == 'Darwin':
-            logo_path = resource_path('images', 'Logo_Green.gif')
+            logo_path = resource_path('images', 'Logo.gif')
             img = PhotoImage(file=logo_path)
             return win.iconphoto(False, img)
         
