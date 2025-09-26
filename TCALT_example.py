@@ -193,128 +193,6 @@ def Submit(*args):
 
 excel_button: Optional[ctk.CTkButton] = None
 log_button: Optional[ctk.CTkButton] = None
-def Excel(batch_Name):
-    global progress_Bar, excel_button, log_button
-
-    if CurrentOS == "Windows":
-        batch_Input = batch_Entry.get()+".xlsx"
-        import NoDeduction as nd
-
-        logging.info(f"No Deduction Lookup version '{nd.version}' enabled.")
-        
-        try:
-            excel_image = ctk.CTkImage(dark_image=Image.open(resource_path('images', 'excel.png')),
-                            size=(25, 25))
-            log_image = ctk.CTkImage(dark_image=Image.open(resource_path('images', 'log.png')),
-                            size=(25, 25))
-        except Exception as e:
-            logging.critical(f"There was an error loading Excel images. {e}")
-            raise FileNotFoundError("Excel or Log images not found.")
-
-        try:
-            if "excel_button" in globals() and isinstance(excel_button, ctk.CTkButton) and excel_button.winfo_exists():
-                excel_button.place_forget()
-            if "log_button" in globals() and isinstance(log_button, ctk.CTkButton) and log_button.winfo_exists():
-                log_button.place_forget()
-        except:
-            pass
-
-        excel_button = ctk.CTkButton(app, text="Excel", image=excel_image, command=lambda: open_file(str(nd.endPath)), font=(font, 13, "bold"), fg_color="#0b7054", hover_color="darkgreen", height=40)
-        log_button = ctk.CTkButton(app, text="App Log", image=log_image, command=lambda: open_file(str(logger.log_path)), font=(font, 13, "bold"), fg_color="#0b7054", hover_color="darkgreen", height=40)
-        progress_Bar = ctk.CTkProgressBar(app, orientation="horizontal", progress_color="#0b7054", width=250, height=5)
-        progress_Bar.set(0)
-        kill_Btn = ctk.CTkButton(app, text='Cancel', command=nd.Kill, width=150, font=(font, 13, 'bold'), fg_color='#0b7054', hover_color='darkgreen')
-        progress_text = ctk.StringVar(value="Starting...")
-        progress_label = ctk.CTkLabel(app, textvariable=progress_text, font=(font, 13))
-
-        try:
-            nd.NoDeduction(batch_Name, batch_Name, kill_Btn, progress_label, progress_Bar, progress_text)
-        except FileExistsError:
-            batch_Label.place_configure(rely=0.5)
-            batch_Label.configure(text="Please delete \"No Deduction.xlsx\"\nfrom your Desktop before using this module.")
-            return
-
-        batch_Entry.configure(state="normal")
-        batch_Entry.delete(0, "end")
-        kill_Btn.place_forget()
-        progress_Bar.destroy()
-        progress_label.destroy()
-
-        try:
-            if len(nd.error_List)>0:
-                logging.error(f"Batchsheets failed: {len(nd.error_List)}\nPath(s): {"\n".join(nd.error_List)}")
-                logging.info(f"Batchsheets processed: {nd.total_Batchsheets} // Elapsed time: {int(nd.elapsed_Time // 60):02d} minutes and {int(nd.elapsed_Time % 60):02d} seconds")
-                batch_Label.place_configure(rely=0.37)
-                batch_Label.configure(text=f"Completed with {batch_Input} batchsheets!\nType \"Exit\" to return to TCALT.\n Errors: {len(nd.error_List)}\nPlease see TCO App log for more information.")
-                excel_button.place(x=175, y=195, anchor="c")
-                log_button.place(x=325, y=195, anchor="c")
-            else:
-                logging.info(f"Completed with {batch_Input} batchsheets without errors. Batchsheets processed: {nd.total_Batchsheets} // Elapsed time: {int(nd.elapsed_Time // 60):02d} minutes and {int(nd.elapsed_Time % 60):02d} seconds")
-                batch_Label.place_configure(rely=0.35)
-                batch_Label.configure(text=f"Completed with {batch_Input} batchsheets!\nType \"Exit\" to return to TCALT.")
-                excel_button.place(x=250, y=175, anchor="c")  
-        except:
-            batch_Label.place_configure(rely=0.5)
-            batch_Label.configure(text="No Deduction Lookup cancelled.\nType \"Exit\" to return to TCALT")
-    else:
-        batch_Input = batch_Entry.get()+".xlsx"
-        import NoDeductionMac as ndm
-
-        logging.info(f"No Deduction Lookup version '{ndm.version}' enabled.")
-
-        try:
-            excel_image = ctk.CTkImage(dark_image=Image.open(resource_path('images', 'excel.png')),
-                            size=(25, 25))
-            log_image = ctk.CTkImage(dark_image=Image.open(resource_path('images', 'log.png')),
-                            size=(25, 25))
-        except Exception as e:
-            logging.critical(f"There was an error loading Excel images. {e}")
-            raise FileNotFoundError("Excel or Log images not found.")
-
-        try:
-            if "excel_button" in globals() and isinstance(excel_button, ctk.CTkButton) and excel_button.winfo_exists():
-                excel_button.place_forget()
-            if "log_button" in globals() and isinstance(log_button, ctk.CTkButton) and log_button.winfo_exists():
-                log_button.place_forget()
-        except:
-            pass
-
-        excel_button = ctk.CTkButton(app, text="Excel", image=excel_image, command=lambda: open_file(str(ndm.endPath)), font=(font, 13, "bold"), fg_color="#0b7054", hover_color="darkgreen", height=40)
-        log_button = ctk.CTkButton(app, text="App Log", image=log_image, command=lambda: open_file(str(logger.log_path)), font=(font, 13, "bold"), fg_color="#0b7054", hover_color="darkgreen", height=40)
-        progress_Bar = ctk.CTkProgressBar(master=app, orientation="horizontal", progress_color="#0b7054", width=250, height=5)
-        progress_Bar.set(0)
-        kill_Btn = ctk.CTkButton(app, text='Cancel', command=ndm.Kill, width=150, font=(font, 13, 'bold'), fg_color='#0b7054', hover_color='darkgreen')
-        progress_text = ctk.StringVar(value="Starting...")
-        progress_label = ctk.CTkLabel(app, textvariable=progress_text, font=(font, 13))
-        
-        try:
-            ndm.NoDeduction(batch_Name, batch_Name, kill_Btn, progress_label, progress_Bar, progress_text)
-        except FileExistsError:
-            batch_Label.place_configure(rely=0.5)
-            batch_Label.configure(text="Please delete \"No Deduction.xlsx\"\nfrom your Desktop before using this module.")
-            return
-
-        batch_Entry.delete(0, "end")
-        kill_Btn.place_forget()
-        progress_Bar.destroy()
-        progress_label.destroy()
-
-        try:
-            if len(ndm.error_List)>0:
-                logging.error(f"Batchsheets failed: {len(ndm.error_List)}\nPath(s): {"\n".join(ndm.error_List)}")
-                logging.info(f"Batchsheets processed: {ndm.total_Batchsheets} // Elapsed time: {int(ndm.elapsed_Time // 60):02d} minutes and {int(ndm.elapsed_Time % 60):02d} seconds")
-                batch_Label.place_configure(rely=0.37)
-                batch_Label.configure(text=f"Completed with {batch_Input} batchsheets!\nType \"Exit\" to return to TCALT.\n Errors: {len(ndm.error_List)}\nPlease see TCO App log for more information.")
-                excel_button.place(x=175, y=195, anchor="c")
-                log_button.place(x=325, y=195, anchor="c")
-            else:
-                logging.info(f"Completed with {batch_Input} batchsheets without errors. Batchsheets processed: {ndm.total_Batchsheets} // Elapsed time: {int(ndm.elapsed_Time // 60):02d} minutes and {int(ndm.elapsed_Time % 60):02d} seconds")
-                batch_Label.place_configure(rely=0.35)
-                batch_Label.configure(text=f"Completed with {batch_Input} batchsheets!\nType \"Exit\" to return to TCALT.")
-                excel_button.place(x=250, y=175, anchor="c")
-        except:
-            batch_Label.place_configure(rely=0.5)
-            batch_Label.configure(text=f"No Deduction Lookup cancelled.\nType \"Exit\" to return to TCALT.")
 
 def open_file(path: str) -> None:
     """Opens a file from given path with the device's default software"""
@@ -341,13 +219,6 @@ class Search:
         Clear()
 
         srch = ent.get().strip()
-        tool_list: list[str] = ['__Excel', '__Property_Check', '__Field_Engineer']
-        if not admin_access and any(t in srch for t in tool_list):
-            ent.delete(0, 'end')
-            intro_label = ctk.CTkLabel(app, text='Sorry, you do not have access to this feature.', font=(font, 17))
-            intro.append(intro_label)
-            intro_label.place(x=250, y=150, anchor="c")
-            return
         
         srch_result = srch
         label_addr = []
@@ -360,97 +231,10 @@ class Search:
             short_input = ctk.CTkLabel(app, text='Please enter at least 3 characters to be searched.', font=(font, 17))
             label_addr.append(short_input)
             short_input.place(relx=0.5, rely=0.47, anchor='center')
-        elif srch == '__Excel':
-            if user == "Victor":
-                logging.info("No Deduction Lookup enabled. 안녕하세요, 빅터!")
-            else:
-                logging.info("No Deduction Lookup enabled.")
-
-            ent.place_forget()
-            srch_btn.place_forget()
-            
-            placeholder_text = "Enter Batchsheet Name Here"
-            entry = ctk.StringVar(value=placeholder_text)
-            entry.trace_add("write", lambda *i: _Limit_Entry(entry, 8))
-            batch_Entry = ctk.CTkEntry(app, textvariable=entry, justify="center", font=(font, 13), width=250)
-            batch_Label = ctk.CTkLabel(app, text="Enter batchsheet name above\nFormat must be XX.XX.XX\nClick the menu button above to exit", font=(font, 17))
-            batch_Entry.bind("<FocusIn>", lambda i: _On_Focus_In(entry, batch_Entry, placeholder_text))
-            batch_Entry.bind("<FocusOut>", lambda i: _On_Focus_Out(entry, batch_Entry, placeholder_text))
-            batch_Entry.place(x=250, y=30, anchor="c")
-            batch_Label.place(relx=0.5, rely=0.5, anchor="center")
-            batch_Entry.focus()
-
-            def Send_Excel(*args):
-                batch_Name = str(batch_Entry.get())
-                if batch_Name != "":
-                    if re.match(r"\d{2}\.\d{2}\.\d{2}", batch_Name):
-                        batch_Entry.configure(state="disabled", border_color="#0b7054")
-                        batch_Entry.unbind("<Return>")
-                        batch_Label.place_configure(rely=0.35)
-                        batch_Label.configure(text=f"Searching for batchsheets named {batch_Entry.get()+'.xlsx'}")
-                        Excel_Thread(batch_Name, Rebind_Send_Excel)
-                    else:
-                        batch_Label.configure(text=f"{batch_Entry.get()}.xlsx is not a valid batchsheet name.\nPlease make sure to enter a value with the format 'XX.XX.XX'.\nClick the menu button above to exit.")
-                        batch_Entry.delete(0, "end")
-                        batch_Entry.configure(border_color="red")
-                else:
-                    batch_Label.configure(text="You have not entered a name above for the batchsheet.\nPlease make sure to enter a value with the format 'XX.XX.XX'.\nClick the menu button above to exit.")
-                    batch_Entry.configure(border_color="red")
-            
-            def Rebind_Send_Excel():
-                if "disabled" in batch_Entry.cget("state"):
-                    batch_Entry.configure(state="normal")
-                batch_Entry.bind("<Return>", Send_Excel)
-
-            batch_Entry.bind("<Return>", Send_Excel)
-        elif srch == "__Property_Check":
-            logging.info("Property Check Invoice Creator loaded.")
-            ent.place_forget()
-            srch_btn.place_forget()
-            
-            def manage_file():
-                try:
-                    selected_file: Optional[Path] = browse_file()
-                except FileNotFoundError:
-                    path_entry.configure(border_color='red')
-                    intro_label.configure(text='No file selected.\nPlease select a CSV using the browse button to continue.\nClick the menu button above to exit.')
-                    selected_file = None
-                if selected_file:
-                    path_entry.configure(border_color='#0b7054')
-                    entry_Var.set(selected_file.name)
-                    try:
-                        files: str = create_iif(str(selected_file))
-                        if not "already exists" in str(files) and not "Nothing new to write." in str(files):
-                            intro_label.configure(text=f"Created file successfully. Please import \"PC Invoices.iif\"\nfrom your Desktop into QuickBooks.\n{files}")
-                        else:
-                            intro_label.configure(text=files)
-                    except Exception:
-                        intro_label.configure(text='There was an error creating the iif file.')
-
-            entry_Var = ctk.StringVar(value="Please select a CSV file")
-            path_entry = ctk.CTkEntry(app, textvariable=entry_Var, justify="center", font=(font, 13), width=280, state='disabled')
-            path_entry.place(relx=0.4, rely=0.1, anchor='center')
-            ctk.CTkButton(app, text='Browse', command=manage_file, font=(font, 13, 'bold'), fg_color='#0b7054', hover_color='darkgreen', width=120).place(relx=0.83, rely=0.1, anchor='center')
-            intro_label = ctk.CTkLabel(app, text='Please select a CSV file using the \"Browse\" button.\nClick the menu button above to exit.', font=(font, 17))
-            intro.append(intro_label)
-            intro_label.place(relx=0.5, rely=0.45, anchor='center')
-            app.update_idletasks()
-        elif srch == "__Field_Engineer":
-            ent.place_forget()
-            srch_btn.place_forget()
-            ctk.CTkLabel(app, text='Field Engineer Contact Info', font=(font, 20, 'bold', 'underline')).place(relx=0.5, rely=0.1, anchor='center')
-            fe = FieldEngineer(db)
-            result = fe.query_fe()
-            return result
         else:
             try:
                 p = f"%{srch_result}%"
-                sql_query = """
-                    SELECT Name, Field_Engineer, Address
-                    FROM Members
-                    WHERE Address LIKE %s OR Name LIKE %s
-                    ORDER BY Name
-                """
+                sql_query = """ """
                 with db.cursor(dictionary=True) as cursor:
                     result = fetch_all(cursor, sql_query, p, p)
                 if len(result) > 0:
@@ -622,10 +406,10 @@ def Version_Check() -> None:
     global v
 
     with db.cursor() as cursor:
-        version_select = fetch_one(cursor, "SELECT MAX(id) FROM Version")
-        version_result = fetch_one(cursor, "SELECT Version FROM Version WHERE id=%s", version_select)
-        link_result = fetch_one(cursor, "SELECT DLink from Version WHERE id=%s", version_select)
-        auto_link_result = fetch_one(cursor, "SELECT Auto_DLink from Version WHERE id=%s", version_select)
+        version_select = fetch_one(cursor, "")
+        version_result = fetch_one(cursor, "", version_select)
+        link_result = fetch_one(cursor, "", version_select)
+        auto_link_result = fetch_one(cursor, "", version_select)
 
     v = version_result
     
@@ -969,15 +753,6 @@ def Update_Timer(start_time: float, window: ctk.CTk) -> None:
     elapsed_time: float = time.time() - start_time
     remaining_time: int = 180 - int(elapsed_time)
 
-    try:
-        if progress_Bar.winfo_exists():
-            Reset_Timer(window)
-            return
-    except Exception as e:
-        if not re.search(r"^name | destroyed$", str(e)) and str(e) not in error_list:
-            logging.error(f"There was an error with checking if the progress bar exists. {e}")
-            error_list.append(str(e))
-
     if remaining_time > 0:
         timer = window.after(1000, Update_Timer, start_time, window)
     else:
@@ -991,18 +766,16 @@ def count_process_instances(process_name) -> int:
             count += 1
     return count
 
-def Excel_Thread(batch_Name, rebind_callback) -> None:
+def Excel_Thread() -> None:
     def run():
-        Excel(batch_Name)
-        if rebind_callback:
-            batch_Entry.after(0, rebind_callback)
+        Excel_Function()
 
-    threading.Thread(target=run, daemon=True).start()
+    # start threading.Thread(target=run, daemon=True).start()
 
 def browse_file() -> Path:
     file_path = filedialog.askopenfilename(
         title="Select a CSV file",
-        filetypes=[("RadGridExport", "*.csv")]
+        filetypes=[("", "*.csv")]
     )
     if file_path:
         logging.info(f"File {file_path} successfully loaded.")
@@ -1012,32 +785,7 @@ def browse_file() -> Path:
         raise FileNotFoundError
 
 def resource_path(*parts: str) -> Path:
-    _MEIPASS = getattr(sys, "_MEIPASS", None)
-    if _MEIPASS:
-        base = Path(_MEIPASS)
-    else:
-        base = Path(__file__).resolve().parent
-    return base.joinpath(*parts)
-
-def show_splash() -> None:
-    splash = ctk.CTk()
-    ctk.set_appearance_mode('dark')
-    splash.overrideredirect(True)
-    splash.title('TCALT Splash')
-    _set_icon(splash)
-    center_window(splash, 350, 100)
-    splash.configure(fg_color="black")
-
-    logo_path = resource_path('images', 'splash.png')
-    img = Image.open(logo_path)
-    img.thumbnail((300, 100))
-    logo = ctk.CTkImage(dark_image=img, size=img.size)
-
-    label = ctk.CTkLabel(splash, image=logo, text="Loading...", font=(font, 15), compound="top")
-    label.pack(expand=True)
-
-    splash.after(2000, lambda: AppSwitcher.start_login(splash))
-    splash.mainloop()
+    return Path
 
 def main_menu() -> None:
     menu = ctk.CTk()
@@ -1199,5 +947,3 @@ if __name__ == "__main__":
     else:
         logging.critical(f"TCALT is not compatible with your system.\nCurrent OS = {CurrentOS}")
         sys.exit(1)
-
-    show_splash()
