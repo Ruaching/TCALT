@@ -806,23 +806,13 @@ def main_menu() -> None:
     TOOLS = ['No Deduction', 'Property Check', 'Field Engineer Information', 'Member Information']
 
     default = default_tool('load')
-    if default == '__Excel':
-        TOOL = TOOLS[0]
-    elif default == '__Property_Check':
-        TOOL = TOOLS[1]
-    elif default == '__Field_Engineer':
-        TOOL = TOOLS[2]
-    elif default == '__Member':
-        TOOL = TOOLS[3]
-    else:
-        TOOL = 'None'
     
     if default and default != '' and default_mode['value'] == 0:
         default_mode['value'] = 1
         menu.after(100, lambda: AppSwitcher.start_app(menu, default, 0))
 
     make_default = ctk.CTkCheckBox(menu, text='Set as default tool', checkbox_height=17, checkbox_width=17, corner_radius=3, hover=False, fg_color='darkgreen', font=(font, 11))
-    default_label = ctk.CTkLabel(menu, text=f'Default: {TOOL}', font=(font, 11))
+    default_label = ctk.CTkLabel(menu, text=f'Default: {default}', font=(font, 11))
     excel_button = ctk.CTkButton(menu, image=excel_icon, text='', width=96, height=80, fg_color='#0b7054', hover_color='darkgreen', command=lambda: AppSwitcher.start_app(menu, '__Excel', int(make_default.get())))
     pcheck_button = ctk.CTkButton(menu, image=pcheck_icon, text='', width=96, height=80, fg_color='#0b7054', hover_color='darkgreen', command=lambda: AppSwitcher.start_app(menu, '__Property_Check', int(make_default.get())))
     fe_button = ctk.CTkButton(menu, image=fe_icon, text='', width=96, height=80, fg_color='#0b7054', hover_color='darkgreen', command=lambda: AppSwitcher.start_app(menu, '__Field_Engineer', int(make_default.get())))
