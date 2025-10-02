@@ -386,8 +386,7 @@ def fetch_one(cursor, query: str, *params: str) -> Any:
     return row[0]
 
 def fetch_all(cursor, query:str, *params: str) -> list[dict[str, Any]]:
-    cursor.execute(query, params)
-    rows = cursor.fetchall()
+    rows = """This will return all results from database"""
     return rows
 
 def type_writer_effect(label: ctk.CTkLabel, full_text: str, delay: int = 9, callback=None) -> None:
