@@ -1,4 +1,6 @@
 __pycache__/
+.vs/
+build/
 Config/
 dist/
 Excel Updater/
@@ -6,16 +8,20 @@ Executables/
 images/
 OLD Versions/
 Other/
+PublicFolderSearcher/
 TCALT NEW/
 Yeti/
 *.c
 *.h
 *.html
 *.pyc
+ai.py
 app_paths.py
 db_params.py
 db_reader.py
 fe_lookup.py
+helper_functions.py
+loader.py
 log_params.py
 NoDeduction*.py
 property_check.py
@@ -24,6 +30,5 @@ secrets_keychain.py
 settings_json.py
 *.spec
 TCALT.py
-*.TCO
-test.py
+*.log
 version.txt

@@ -1,6 +1,6 @@
 Thank you for being a valued TotalCare Vendor!
 
-Some antivirus software may block this application from running. This is a false positive warning and will not harm your device.
+Some antivirus softwares may block this application from running. This is a false positive warning and will not harm your device.
 Please include in your trusted programs if needed.
 
 ***DOWNLOAD***
