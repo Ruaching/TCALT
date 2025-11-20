@@ -22,7 +22,7 @@ elif CurrentOS == 'Windows':
 
 def _start_main(win) -> None:
     _safe_destroy(win)
-    import TCALT
+    import main
 
 def show_splash() -> None:
     splash = ctk.CTk()
